@@ -1,1 +1,6 @@
-rootProject.name = 'treciProjekt'
+rootProject.name = 'microservices-kubernetes'
+include 'temperature-microservice'
+include 'humidity-microservice'
+include 'aggregator-microservice'
+
+include 'aggregator-microservice'
