@@ -1,4 +1,4 @@
-package com.treciProjekt.microservices.humidity;
+package com.rassus.treciProjekt.microservices.humidity;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;

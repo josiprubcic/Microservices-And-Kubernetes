@@ -1,4 +1,4 @@
-package com.treciProjekt.microservices.humidity;
+package com.rassus.treciProjekt.microservices.humidity;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

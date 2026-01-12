@@ -1,4 +1,4 @@
-package com.treciProjekt.microservices.humidity;
+package com.rassus.treciProjekt.microservices.humidity;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.Resource;
