@@ -4,7 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'com.rassus.humidity'
+group = 'com.rassus.aggregator'
 version = '0.0.1-SNAPSHOT'
 description = 'Treci projekt iz predmeta Raspodijeljeni sustavi, mikroservisi i kubernetes'
 
@@ -23,6 +23,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+springBoot {
+	mainClass = 'com.rassus.treciProjekt.microservices.aggregator.AggregatorApplication'
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-class AggregatorApplication {
+public class AggregatorApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AggregatorApplication.class, args);

@@ -27,6 +27,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+springBoot {
+	mainClass = 'com.rassus.treciProjekt.microservices.temperature.TemperatureApplication'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
