@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temperature-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temperature
+  template:
+    metadata:
+      labels:
+        app: temperature
+    spec:
+      containers:
+        - name: temperature
+          image: temperature-microservice:0.0.1-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATA_FILEPATH
+              value: "file:/data/readings.csv"
+          volumeMounts:
+            - name: readings-volume
+              mountPath: /data/readings.csv
+              subPath: readings.csv
+          resources:
+            requests:
+              memory: "768Mi"
+              cpu: "250m"
+            limits:
+              memory: "768Mi"
+              cpu: "500m"
+      volumes:
+        - name: readings-volume
+          configMap:
+            name: readings-cm
+            items:
+              - key: readings.csv
+                path: readings.csv
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temperature-service
+spec:
+  selector:
+    app: temperature
+  ports:
+    - port: 8080
+      targetPort: 8080

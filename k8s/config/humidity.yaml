@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: humidity-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: humidity
+  template:
+    metadata:
+      labels:
+        app: humidity
+    spec:
+      containers:
+        - name: humidity
+          image: humidity-microservice:0.0.1-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env:
+            - name: DATA_FILEPATH
+              value: "file:/data/readings.csv"
+          volumeMounts:
+            - name: readings-volume
+              mountPath: /data/readings.csv
+              subPath: readings.csv
+          resources:
+            requests:
+              memory: "768Mi"
+              cpu: "250m"
+            limits:
+              memory: "768Mi"
+              cpu: "500m"
+      volumes:
+        - name: readings-volume
+          configMap:
+            name: readings-cm
+            items:
+              - key: readings.csv
+                path: readings.csv
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: humidity-service
+spec:
+  selector:
+    app: humidity
+  ports:
+    - port: 8081
+      targetPort: 8081
