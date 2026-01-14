@@ -45,8 +45,11 @@ kind: Service
 metadata:
   name: humidity-service
 spec:
+  type: NodePort
   selector:
     app: humidity
   ports:
     - port: 8081
       targetPort: 8081
+      nodePort: 30081
+
