@@ -15,7 +15,7 @@ class HumidityReading {
     private Long id;
 
     private double humValue;
-    private LocalDateTime timestamp;
+
 
 
     public HumidityReading() {
@@ -23,7 +23,6 @@ class HumidityReading {
 
     public HumidityReading(double humValue){
         this.humValue = humValue;
-        this.timestamp = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -42,11 +41,5 @@ class HumidityReading {
         this.humValue = humValue;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }

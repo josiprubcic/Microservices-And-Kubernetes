@@ -19,7 +19,7 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: DATA_FILEPATH
+            - name: data.filepath
               value: "file:/data/readings.csv"
           volumeMounts:
             - name: readings-volume

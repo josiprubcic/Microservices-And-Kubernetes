@@ -1,44 +1,45 @@
-UPUTE:
-1. pobrinite se da je rancher desktop ispravno konfiguriran (ukljucen kubernetes dio) i ukljucen.
+UPUTE ZA POKRETANJE (Rancher Desktop + Kubernetes)
 
-2. za svaki mikroservis je potrebno napraviti build image:
-    - u root direktoriju projekta pokrenututi:
-        - "cd aggregator-microservice | ./gradlew bootBuildImage"
-        - "cd .."
-        - "cd temperature-microservice | ./gradlew bootBuildImage"
-        - "cd .."
-        - "cd humidity-microservice | ./gradlew bootBuildImage"
-        - "cd .."
+1. Pobrinite se da je Rancher Desktop ispravno konfiguriran (uključen Kubernetes dio) i uključen.
 
-    PROVJERA: "docker images | grep microservice"
-              - trebali biste vidjeti izlistana 3 mikroservis image-a:
-                - temperature-microservice:0.0.1-SNAPSHOT
-                - humidity-microservice:0.0.1-SNAPSHOT
-                - aggregator-microservice:0.0.1-SNAPSHOT
+2. Za svaki mikroservis napravite build image-a:
+   cd aggregator-microservice && ./gradlew bootBuildImage && cd ..
+   cd temperature-microservice && ./gradlew bootBuildImage && cd ..
+   cd humidity-microservice && ./gradlew bootBuildImage && cd ..
 
+   PROVJERA: docker images | grep microservice
+   Trebali biste vidjeti:
+   - temperature-microservice:0.0.1-SNAPSHOT
+   - humidity-microservice:0.0.1-SNAPSHOT
+   - aggregator-microservice:0.0.1-SNAPSHOT
 
+3. Deploy ConfigMap-ovi PRVO (za mount datoteka):
+   kubectl apply -f k8s/config/readings-configmap.yaml
+   kubectl apply -f k8s/config/aggregator-configmap.yaml
 
-# 1) Deploy ConfigMap-ovi (prvo, da ih podovi mogu mountati)
-kubectl apply -f k8s/config/readings-configmap.yaml
-kubectl apply -f k8s/config/aggregator-configmap.yaml
+4. Deploy temperature i humidity mikroservisi:
+   kubectl apply -f k8s/config/temperature.yaml
+   kubectl apply -f k8s/config/humidity.yaml
 
-# 2) Deploy temperature i humidity (Deployment + Service)
-kubectl apply -f k8s/config/temperature.yaml
-kubectl apply -f k8s/config/humidity.yaml
+5. Deploy aggregator (posljednji):
+   kubectl apply -f k8s/config/aggregator.yaml
 
-# 3) Deploy aggregator (Deployment + Service/NodePort gateway)
-kubectl apply -f k8s/config/aggregator.yaml
+6. Provjera statusa:
+   kubectl get pods -o wide          # Svi Running/1/1
+   kubectl get svc                   # NodePort: 30080, 30081, 30082
 
-# 4) Provjera statusa
-kubectl get pods
-kubectl get svc
+7. TESTIRANJE (Rancher Desktop localhost radi):
+   curl http://localhost:30080/sensor/temp        # Temperature °C
+   curl http://localhost:30081/sensor/humidity    # Humidity %
+   curl http://localhost:30082/aggregator         # Agregirano (K ili C ovisno o configu)
 
-# 5) Primjer dohvaćanja agregiranih očitanja
+8. Promjena temperature unit-a (°C / K):
+   kubectl edit configmap aggregator-config       # Promijenite temperature.unit=C|K
+   kubectl rollout restart deployment/aggregator-deployment
+   curl http://localhost:30082/aggregator         # Provjerite promjenu
 
-# Opcija A: NodePort (ako si u aggregator-service stavio type: NodePort i nodePort: 30082)
-# (na Rancher Desktop/localhost obično radi ovako)
-curl http://localhost:30082/<AGGREGATOR_ENDPOINT>
-
-# Opcija B: Port-forward (ako ne koristiš NodePort ili ti je lakše za demo)
-kubectl port-forward deployment/aggregator-deployment 8082:8082
-curl http://localhost:8082/<AGGREGATOR_ENDPOINT>
+9. Cleanup (ukoliko je potreban):
+   kubectl delete -f k8s/config/aggregator.yaml
+   kubectl delete -f k8s/config/temperature.yaml
+   kubectl delete -f k8s/config/humidity.yaml
+   kubectl delete configmap readings-cm aggregator-config

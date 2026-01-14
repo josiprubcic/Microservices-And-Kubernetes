@@ -14,13 +14,11 @@ class TemperatureReading {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private double tempValue;
-    private LocalDateTime timestamp;
 
     public TemperatureReading(){}
 
     public TemperatureReading(Double tempValue){
         this.tempValue = tempValue;
-        this.timestamp = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -39,11 +37,4 @@ class TemperatureReading {
         this.tempValue = tempValue;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }
