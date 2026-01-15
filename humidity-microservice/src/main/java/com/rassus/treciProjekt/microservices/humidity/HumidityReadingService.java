@@ -87,14 +87,13 @@ class HumidityReadingService {
     }
 
     private int calculateTargetRow() {
-        // Formula iz zadatka: red ← (brojAktivnihSekundi % 100) + 1
+        // Formula iz zadatka: red <-(brojAktivnihSekundi % 100) + 1
         // "Varijabla brojAktivnihSekundi je razlika između trenutnog vremena i ponoći, 1. siječnja 1970... mjerena u minutama"
 
         long currentMillis = System.currentTimeMillis();
         long minutesSinceEpoch = currentMillis / (1000 * 60);
 
-        // Iako se varijabla zove "brojAktivnihSekundi", zadatak kaže da je u minutama.
-        // Zadržimo ime varijable iz zadatka radi jasnoće, ali znamo da su to minute.
+
         long brojAktivnihSekundi = minutesSinceEpoch;
 
         return (int) ((brojAktivnihSekundi % 100) + 1);

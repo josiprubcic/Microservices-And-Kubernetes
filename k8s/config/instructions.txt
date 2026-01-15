@@ -34,8 +34,9 @@ UPUTE ZA POKRETANJE (Rancher Desktop + Kubernetes)
    curl http://localhost:30082/aggregator         # Agregirano (K ili C ovisno o configu)
 
 8. Promjena temperature unit-a (°C / K):
-   kubectl edit configmap aggregator-config       # Promijenite temperature.unit=C|K
-   kubectl rollout restart deployment/aggregator-deployment
+   aggregator-configmap       # Promijenite temperature.unit=C/K
+   kubectl apply -f k8s/config/aggregator-configmap.yaml
+   kubectl rollout restart deployment/aggregator-deployment  #ako je potrebno
    curl http://localhost:30082/aggregator         # Provjerite promjenu
 
 9. Cleanup (ukoliko je potreban):

@@ -17,9 +17,7 @@ import java.util.Optional;
 
 @Service
 public class TemperatureReadingService {
-    // Ovo omogućuje da se putanja mijenja kroz application.properties
-    // properties: data.filepath=src/main/resources/readings.csv (za lokalno)
-    // Za Docker će biti: data.filepath=/app/config/readings.csv
+
     @Value("${data.filepath:classpath:readings.csv}")
     private Resource dataResource;
 
@@ -33,7 +31,7 @@ public class TemperatureReadingService {
     @PostConstruct
     public void init() {
         try {
-            // PROMJENA 2: Čitamo kao Stream (radi i u JAR-u i u Dockeru)
+
             List<TemperatureReading> tempReadings = new ArrayList<>();
 
             try (BufferedReader reader = new BufferedReader(
@@ -43,7 +41,7 @@ public class TemperatureReadingService {
                 boolean isFirstLine = true;
 
                 while ((line = reader.readLine()) != null) {
-                    // Preskačemo header (prvi red)
+                    // Preskače header (prvi red)
                     if (isFirstLine) {
                         isFirstLine = false;
                         continue;
@@ -52,7 +50,6 @@ public class TemperatureReadingService {
                     String[] values = line.split(",");
                     if (values.length > 0) {
                         try {
-                            // Trim miče praznine ako ih slučajno ima
                             Double tempValue = Double.parseDouble(values[0].trim());
                             tempReadings.add(new TemperatureReading(tempValue));
                         } catch (NumberFormatException e) {
@@ -93,14 +90,13 @@ public class TemperatureReadingService {
     }
 
     private int calculateTargetRow() {
-        // Formula iz zadatka: red ← (brojAktivnihSekundi % 100) + 1
+        // Formula iz zadatka: red <- (brojAktivnihSekundi % 100) + 1
         // "Varijabla brojAktivnihSekundi je razlika između trenutnog vremena i ponoći, 1. siječnja 1970... mjerena u minutama"
 
         long currentMillis = System.currentTimeMillis();
         long minutesSinceEpoch = currentMillis / (1000 * 60);
 
-        // Iako se varijabla zove "brojAktivnihSekundi", zadatak kaže da je u minutama.
-        // Zadržimo ime varijable iz zadatka radi jasnoće, ali znamo da su to minute.
+
         long brojAktivnihSekundi = minutesSinceEpoch;
 
         return (int) ((brojAktivnihSekundi % 100) + 1);

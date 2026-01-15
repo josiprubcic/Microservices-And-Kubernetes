@@ -10,16 +10,13 @@ public class HumidityResponse {
     private String unit = "%";
     private double value;
 
-    // 1. OBAVEZAN PRAZAN KONSTRUKTOR
     public HumidityResponse() {
     }
 
-    // Tvoj postojeći konstruktor (može ostati)
     public HumidityResponse(double value) {
         this.value = value;
     }
 
-    // Getteri i Setteri (su ti dobri)
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
